@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://Cluster46068:Keanlk192002%40nkalk192002@cluster46068.xxm5ube.mongodb.net/?retryWrites=true&w=majority
+      database: web_quyen_gop
