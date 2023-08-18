@@ -3,3 +3,7 @@ spring:
     mongodb:
       uri: mongodb+srv://Cluster46068:Keanlk192002%40nkalk192002@cluster46068.xxm5ube.mongodb.net/?retryWrites=true&w=majority
       database: web_quyen_gop
+
+app:
+  cors:
+    allowedOrigins: http://localhost:8080,http://localhost:5173
