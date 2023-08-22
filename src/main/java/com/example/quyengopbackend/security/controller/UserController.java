@@ -29,7 +29,7 @@ public class UserController {
         Optional<User> user1 = userRepository.findUserByUsername(user.getUsername());
         if (user1.isPresent()) {
             if (user1.get().getPassword().equals(user.getPassword())) {
-                return user;
+                return user1.get();
             } else {
                throw new UserNotFoundException("wrong input username or password");
             }
