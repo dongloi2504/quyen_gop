@@ -36,4 +36,21 @@ public class UserController {
         }
         throw new UserNotFoundException("wrong input username or password");
     }
+
+    @GetMapping("/currentUser")
+    public User getCurrentUser(@RequestParam String username) {
+        return userRepository.findUserByUsername(username).orElse(null);
+    }
+
+    @PostMapping("/updateUser")
+    public User updateUser(@RequestBody User user, @RequestParam String username) {
+        User currentUser = userRepository.findUserByUsername(username).orElse(null);
+        if (currentUser != null) {
+            currentUser.setUsername(user.getUsername());
+            currentUser.setPassword(user.getPassword());
+            userRepository.save(currentUser);
+        }
+        return currentUser;
+    }
 }
+
