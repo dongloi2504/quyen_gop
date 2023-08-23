@@ -5,21 +5,29 @@ import com.example.quyengopbackend.post.dto.PostDto;
 import com.example.quyengopbackend.post.exception.PostNotFoundException;
 import com.example.quyengopbackend.post.model.Post;
 import com.example.quyengopbackend.post.repository.PostRepository;
+import com.example.quyengopbackend.security.exception.UserNotFoundException;
+import com.example.quyengopbackend.security.model.User;
+import com.example.quyengopbackend.security.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServiceImpl implements PostService {
     private Logger logger = LoggerFactory.getLogger(PostServiceImpl.class);
     private PostRepository postRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -34,13 +42,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Post createPost(PostDto postDto) throws PostNotFoundException {
-        Post post = new Post(
-                postDto.getName(),
-                postDto.getImgUrl(),
-                postDto.getContact()
-        );
-        return postRepository.save(post);
+    public Post createPost(PostDto postDto) throws PostNotFoundException, UserNotFoundException {
+
+        Optional<User> userOptional = userRepository.findUserByUsername(postDto.getUserName());
+        if (!userOptional.isPresent()) {
+            // Handle case where the userOptional doesn't exist
+            throw new UserNotFoundException("Not Found User");
+        }
+
+        // Create a new Post object with userOptional information
+        Post newPost = new Post(postDto.getName(), postDto.getImgUrl(), postDto.getContact(), userOptional.get().getId());
+        return postRepository.save(newPost);
     }
 
     @Override

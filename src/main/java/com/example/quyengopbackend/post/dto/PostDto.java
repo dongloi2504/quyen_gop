@@ -10,4 +10,5 @@ public class PostDto {
     private String name;
     private String imgUrl;
     private String contact;
+    private String userName;
 }

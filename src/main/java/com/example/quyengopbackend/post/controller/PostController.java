@@ -4,6 +4,9 @@ import com.example.quyengopbackend.post.dto.PostDto;
 import com.example.quyengopbackend.post.exception.PostNotFoundException;
 import com.example.quyengopbackend.post.model.Post;
 import com.example.quyengopbackend.post.service.PostService;
+import com.example.quyengopbackend.security.exception.UserNotFoundException;
+import com.example.quyengopbackend.security.model.User;
+import com.example.quyengopbackend.security.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +46,14 @@ public class PostController {
 
     @PostMapping("")
     public ResponseEntity<?> createPost(@Valid @RequestBody PostDto postDto) {
-        return ResponseEntity.ok(postService.createPost(postDto));
+        // Save the new post
+        try{
+            Post createdPost = postService.createPost(postDto);
+            return ResponseEntity.ok(createdPost);
+        }catch (PostNotFoundException | UserNotFoundException e){
+            return  ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Post Not Found Error or User Not Found Error");
+        }
+
     }
     @DeleteMapping("/{id}")
     public ResponseEntity deleteOne(@PathVariable String id){
