@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "post")
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @Entity
 public class Post {
     @Id
     private String id;
@@ -19,6 +19,9 @@ public class Post {
 
     private String contact;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // Construct Plan by DTO
     public Post(String name, String imgUrl, String contact) {
